@@ -52,6 +52,9 @@ public class Yard {
     @OneToMany(mappedBy = "yard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Plant> plants = new ArrayList<>();
 
+    @OneToMany(mappedBy = "yard", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Animal> animals = new ArrayList<>();
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

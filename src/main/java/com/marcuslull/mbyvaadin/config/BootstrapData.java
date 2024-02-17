@@ -1,9 +1,11 @@
 package com.marcuslull.mbyvaadin.config;
 
+import com.marcuslull.mbyvaadin.model.Animal;
 import com.marcuslull.mbyvaadin.model.Plant;
 import com.marcuslull.mbyvaadin.model.User;
 import com.marcuslull.mbyvaadin.model.Yard;
 import com.marcuslull.mbyvaadin.model.enums.*;
+import com.marcuslull.mbyvaadin.repository.AnimalRepository;
 import com.marcuslull.mbyvaadin.repository.PlantRepository;
 import com.marcuslull.mbyvaadin.repository.UserRepository;
 import com.marcuslull.mbyvaadin.repository.YardRepository;
@@ -15,12 +17,15 @@ public class BootstrapData implements CommandLineRunner {
     private final UserRepository userRepository;
     private final YardRepository yardRepository;
     private final PlantRepository plantRepository;
+    private final AnimalRepository animalRepository;
 
     public BootstrapData(UserRepository userRepository, YardRepository yardRepository,
-                         PlantRepository plantRepository) {
+                         PlantRepository plantRepository,
+                         AnimalRepository animalRepository) {
         this.userRepository = userRepository;
         this.yardRepository = yardRepository;
         this.plantRepository = plantRepository;
+        this.animalRepository = animalRepository;
     }
 
     @Override
@@ -47,8 +52,16 @@ public class BootstrapData implements CommandLineRunner {
         plant.setWateringFrequency(WateringFrequency.EVERY_OTHER_DAY);
         plant.setYard(yard);
 
+        Animal animal = new Animal();
+        animal.setName("Dog");
+        animal.setAnimalSubType(AnimalSubType.MAMMAL);
+        animal.setDietType(DietType.OMNIVORE);
+        animal.setNativeAreaType(NativeAreaType.GRASSLAND);
+        animal.setYard(yard);
+
         userRepository.save(user);
         yardRepository.save(yard);
         plantRepository.save(plant);
+        animalRepository.save(animal);
     }
 }
