@@ -1,28 +1,24 @@
 package com.marcuslull.mbyvaadin.config;
 
+import com.marcuslull.mbyvaadin.view.LoginView;
+import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain h2SecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()).disable()) // H2 Console config
-                .authorizeHttpRequests(requests -> requests.requestMatchers(toH2Console()).permitAll() // H2 Console config
-                        .anyRequest().authenticated())
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // H2 Console config
-                .formLogin(Customizer.withDefaults());
-        return http.build();
+public class SecurityConfig extends VaadinWebSecurity {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // Spring security config with Vaadin integration
+        http.authorizeHttpRequests(auth -> auth.requestMatchers(AntPathRequestMatcher
+                .antMatcher(HttpMethod.GET, "/images/*.png")).permitAll());
+        super.configure(http);
+        setLoginView(http, LoginView.class);
     }
 
     @Bean
