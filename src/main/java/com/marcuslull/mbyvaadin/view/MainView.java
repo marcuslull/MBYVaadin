@@ -1,7 +1,11 @@
 package com.marcuslull.mbyvaadin.view;
 
+import com.marcuslull.mbyvaadin.repository.PlantRepository;
+import com.marcuslull.mbyvaadin.repository.UserRepository;
+import com.marcuslull.mbyvaadin.repository.YardRepository;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -13,11 +17,27 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @PageTitle("Main | My BackYard")
 @PermitAll
 public class MainView extends VerticalLayout {
-    public MainView() {
+    private final UserRepository userRepository;
+    private final YardRepository yardRepository;
+    private final PlantRepository plantRepository;
+    public MainView(UserRepository userRepository, YardRepository yardRepository, PlantRepository plantRepository) {
+        this.userRepository = userRepository;
+        this.yardRepository = yardRepository;
+        this.plantRepository = plantRepository;
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MultiSelectListBox<String> multiSelectListBox1 = new MultiSelectListBox<>();
+        multiSelectListBox1.setItems(userRepository.findAll().toString());
+        MultiSelectListBox<String> multiSelectListBox2 = new MultiSelectListBox<>();
+        multiSelectListBox2.setItems(yardRepository.findAll().toString());
+        MultiSelectListBox<String> multiSelectListBox3 = new MultiSelectListBox<>();
+        multiSelectListBox3.setItems(plantRepository.findAll().toString());
         add(
                 new H1("My BackYard"),
-                new Paragraph("Welcome " + authentication.getName())
+                new Paragraph("Welcome " + authentication.getName()),
+                multiSelectListBox1,
+                multiSelectListBox2,
+                multiSelectListBox3
         );
     }
 }
